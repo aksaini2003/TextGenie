@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon/favicon_main.png') }}">
+    <title>InsightGenie - Document Intelligence Platform</title>
+    
+    <!-- Bootstrap 5.3.0 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome 6.4.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Professional Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-brain me-2"></i>
+                <span class="brand-text">InsightGenie</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#qa-section">
+                            <i class="fas fa-comments me-1"></i>Q&A
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#summarizer-section">
+                            <i class="fas fa-compress-alt me-1"></i>Summarizer
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#translator-section">
+                            <i class="fas fa-language me-1"></i>Translator
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm ms-2" id="clearHistoryBtn">
+                            <i class="fas fa-trash-alt me-1"></i>Clear History
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Document Intelligence</span><br>
+                        Powered by AI
+                    </h1>
+                    <p class="hero-subtitle">
+                        Upload, analyze, and interact with your documents using cutting-edge AI technology. 
+                        Get instant answers, summaries, and translations.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Multi-format Support</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-robot"></i>
+                            <span>AI-Powered Analysis</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-globe"></i>
+                            <span>80+ Languages</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-visual">
+                        <div class="floating-card">
+                            <i class="fas fa-brain"></i>
+                            <h3>AI Intelligence</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 sidebar-container">
+                <div class="sidebar">
+                    <div class="upload-section card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-cloud-upload-alt me-2"></i>Upload Documents</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-content">
+                                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                    <h6>Drag & Drop Files</h6>
+                                    <p>or click to browse</p>
+                                    <div class="supported-formats">
+                                        <span class="format-badge">PDF</span>
+                                        <span class="format-badge">DOCX</span>
+                                        <span class="format-badge">TXT</span>
+                                    </div>
+                                </div>
+                                <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt" hidden>
+                            </div>
+                            
+                            <!-- Upload Progress -->
+                            <div id="uploadProgress" class="upload-progress" style="display: none;">
+                                <div class="progress mb-2">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted">Processing files...</small>
+                            </div>
+                            
+                            <!-- Upload Results -->
+                            <div id="uploadResults" class="upload-results"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-lg-9 main-content">
+                <!-- Q&A Section -->
+                <section id="qa-section" class="content-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-comments me-2"></i>Document Q&A</h2>
+                        <p>Ask questions about your uploaded documents and get intelligent answers</p>
+                    </div>
+                    
+                    <div class="chat-container card">
+                        <div class="card-body">
+                            <div id="chatHistory" class="chat-history"></div>
+                            
+                            <div class="chat-input-container">
+                                <div class="input-group">
+                                    <input type="text" id="questionInput" class="form-control" 
+                                           placeholder="Ask a question about your documents..." disabled>
+                                    <button class="btn btn-primary" id="askBtn" disabled>
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions mt-3">
+                        <button class="btn btn-outline-primary btn-sm" id="summarizeDocsBtn" disabled>
+                            <i class="fas fa-compress-alt me-1"></i>Summarize All Documents
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Text Summarizer Section -->
+                <section id="summarizer-section" class="content-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-compress-alt me-2"></i>Text Summarizer</h2>
+                        <p>Get concise summaries of any text with customizable length</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Text to Summarize</label>
+                                        <textarea id="summarizeTextInput" class="form-control" rows="8" 
+                                                  placeholder="Paste your text here (up to 8,000 words)..."></textarea>
+                                        <div class="form-text">
+                                            <span id="wordCount">0 words</span> / 8,000 max
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Summary Length</label>
+                                        <select id="summarySize" class="form-select">
+                                            <option value="Short (1-2 lines)">Short (1-2 lines)</option>
+                                            <option value="Medium (1 paragraph)" selected>Medium (1 paragraph)</option>
+                                            <option value="Detailed (multi-paragraph)">Detailed (multi-paragraph)</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary w-100" id="summarizeTextBtn">
+                                        <i class="fas fa-compress-alt me-1"></i>Generate Summary
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="summaryResult" class="summary-result" style="display: none;">
+                                <h6>Summary:</h6>
+                                <div class="summary-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Translator Section -->
+                <section id="translator-section" class="content-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-language me-2"></i>Multi-Language Translator</h2>
+                        <p>Translate text between 80+ languages with high accuracy</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Source Language</label>
+                                        <select id="sourceLanguage" class="form-select">
+                                            <option value="English" selected>English</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Text to Translate</label>
+                                        <textarea id="translateInput" class="form-control" rows="6" 
+                                                  placeholder="Enter text to translate..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Target Language</label>
+                                        <select id="targetLanguage" class="form-select">
+                                            <option value="Spanish" selected>Spanish</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Translation</label>
+                                        <textarea id="translationOutput" class="form-control" rows="6" 
+                                                  placeholder="Translation will appear here..." readonly></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button class="btn btn-primary" id="translateBtn">
+                                    <i class="fas fa-language me-1"></i>Translate
+                                </button>
+                                <button class="btn btn-outline-secondary ms-2" id="swapLanguagesBtn">
+                                    <i class="fas fa-exchange-alt me-1"></i>Swap Languages
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">InsightGenie</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Processing your request...</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
